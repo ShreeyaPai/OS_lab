@@ -1,0 +1,65 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<limits.h>
+
+typedef struct process
+{
+	int id,at,bt,ct,wt,tat,isComplete;
+}pro;
+
+pro p[10];
+
+void main()
+{
+	int n,tempBT[10],Ttat=0,Twt=0,completed=0,time=0,minIndex,minBT;
+	printf("Enter the number of processes: ");
+	scanf("%d",&n);
+	printf("Enter the AT and BT of the processes\n");
+	for(int i=0;i<n;i++)
+	{
+		p[i].id=i+1;
+		scanf("%d%d",&p[i].at,&p[i].bt);
+		tempBT[i]=p[i].bt;
+		p[i].isComplete=0;
+	}
+	while(completed!=n)
+	{
+		minBT=INT_MAX;
+		minIndex=-1;
+		for(int i=0;i<n;i++)
+		{
+			if(p[i].at<=time && !p[i].isComplete)
+			{
+				if(p[i].bt<minBT || p[i].bt==minBT && p[i].at<p[minIndex].at)
+				{
+					minBT=p[i].bt;
+					minIndex=i;
+				}
+			}
+		}
+		if(minIndex==-1)
+		{
+			time++;
+		}
+			
+		else
+		{
+			completed++;
+			p[minIndex].isComplete=1;
+			time+=p[minIndex].bt;
+			printf(" | P%d (%d) %d | ",p[minIndex].id,p[minIndex].bt,time);
+			p[minIndex].ct=time;
+			p[minIndex].tat=p[minIndex].ct-p[minIndex].at;
+			p[minIndex].wt=p[minIndex].tat-tempBT[minIndex];
+			Ttat+=p[minIndex].tat;
+			Twt+=p[minIndex].wt;
+		}
+	}
+	printf("PID   AT   BT   CT\tWT\tTAT\n");
+	for(int i=0;i<n;i++)
+	{
+		printf("%d   %d   %d   %d\t%d\t%d\n",p[i].id,p[i].at,tempBT[i],p[i].ct,p[i].wt,p[i].tat);
+	}
+	printf("Avg TAT %f\n",(float)Ttat/n);
+	printf("Avg WT %f\n",(float)Twt/n);
+}
